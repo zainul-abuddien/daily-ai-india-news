@@ -1,0 +1,7 @@
+.env
+.venv/
+__pycache__/
+*.pyc
+email_preview.html
+email_preview.txt
+.pytest_cache/

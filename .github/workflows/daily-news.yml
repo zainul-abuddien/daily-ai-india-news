@@ -1,0 +1,32 @@
+name: Daily AI + India News Email
+
+on:
+  schedule:
+    # Runs every day at 02:30 UTC, which is 08:00 in India Standard Time.
+    - cron: "30 2 * * *"
+  workflow_dispatch:
+
+jobs:
+  send-news-email:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Send daily email
+        env:
+          GMAIL_ADDRESS: ${{ secrets.GMAIL_ADDRESS }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+          TO_EMAIL: ${{ secrets.TO_EMAIL }}
+          SENDER_NAME: Daily News Bot
+          MAX_NEWS_AGE_HOURS: "48"
+          TIMEZONE: Asia/Kolkata
+        run: python main.py --send
