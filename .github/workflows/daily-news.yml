@@ -2,8 +2,8 @@ name: Daily AI + India News Email
 
 on:
   schedule:
-    # Runs every day at 02:30 UTC, which is 08:00 in India Standard Time.
-    - cron: "17 2 * * *"
+    # Runs every day at 02:25 UTC, which is 07:55 in India Standard Time.
+    - cron: "25 2 * * *"
   workflow_dispatch:
 
 jobs:
