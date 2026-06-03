@@ -2,8 +2,10 @@ name: Daily AI + India News Email
 
 on:
   schedule:
-    # Runs every day at 02:25 UTC, which is 07:55 in India Standard Time.
+    # Backup schedules: 07:55, 08:05, and 08:15 India time.
     - cron: "25 2 * * *"
+    - cron: "35 2 * * *"
+    - cron: "45 2 * * *"
   workflow_dispatch:
 
 jobs:
