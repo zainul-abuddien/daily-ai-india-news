@@ -87,6 +87,37 @@ def _plain_items(items: list[SummaryItem]) -> list[str]:
 def load_template():
     template = Path("templates/email.html")
     return template.read_text(encoding="utf-8")
+def _build_html(
+    date_label: str,
+    ai_items: list[SummaryItem],
+    india_items: list[SummaryItem],
+    key_takeaway: str,
+) -> str:
+
+    template = load_template()
+
+    header = f"""
+<div class="header">
+<h1>📰 Daily AI + India News</h1>
+<div class="date">{html.escape(date_label)}</div>
+</div>
+"""
+
+    ai_html = _html_section("🤖 Top AI News", ai_items)
+    india_html = _html_section("🇮🇳 Top India News", india_items)
+
+    footer = """
+<div class="footer">
+Made with ❤️ using Python + GitHub Actions
+</div>
+"""
+
+    template = template.replace("{{HEADER}}", header)
+    template = template.replace("{{AI_NEWS}}", ai_html)
+    template = template.replace("{{INDIA_NEWS}}", india_html)
+    template = template.replace("{{FOOTER}}", footer)
+
+    return template
 
 def _html_section(title, items):
 
@@ -133,19 +164,3 @@ Read More →
     return "\n".join(blocks)
 
 
-def _html_section(title: str, items: list[SummaryItem]) -> str:
-    blocks = [f"<h2>{html.escape(title)}</h2>"]
-    for index, item in enumerate(items, start=1):
-        blocks.append(
-            f"""
-    <div style="margin-bottom: 22px;">
-      <h3 style="margin-bottom: 6px;">{index}. {html.escape(item.title)}</h3>
-      <p style="margin: 0 0 6px;"><strong>Date:</strong> {html.escape(item.date)}</p>
-      <p style="margin: 0 0 6px;"><strong>Summary:</strong> {html.escape(item.summary)}</p>
-      <p style="margin: 0 0 6px;"><strong>Why it matters:</strong> {html.escape(item.why_it_matters)}</p>
-      <p style="margin: 0;"><strong>Source:</strong> {html.escape(item.source_name)} -
-        <a href="{html.escape(item.source_link)}">Read more</a>
-      </p>
-    </div>"""
-        )
-    return "\n".join(blocks)
