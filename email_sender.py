@@ -82,26 +82,53 @@ def _plain_items(items: list[SummaryItem]) -> list[str]:
             ]
         )
     return lines
+def load_template():
+    template = Path("templates/email.html")
+    return template.read_text(encoding="utf-8")
 
+def _html_section(title, items):
 
-def _build_html(
-    date_label: str,
-    ai_items: list[SummaryItem],
-    india_items: list[SummaryItem],
-    key_takeaway: str,
-) -> str:
-    return f"""<!doctype html>
-<html>
-  <body style="font-family: Arial, sans-serif; line-height: 1.5; color: #202124;">
-    <p>Good morning,</p>
-    <p>Here is your <strong>Daily AI + India News Update</strong> for {html.escape(date_label)}.</p>
-    {_html_section("Top 5 AI Updates in the World", ai_items)}
-    {_html_section("Top 5 India News Updates", india_items)}
-    <h2>Today's key takeaway</h2>
-    <p>{html.escape(key_takeaway)}</p>
-    <p>Have a good day!</p>
-  </body>
-</html>"""
+    blocks=[f'<div class="section"><div class="section-title">{title}</div>']
+
+    for item in items:
+
+        blocks.append(f"""
+
+<div class="card">
+
+<h2>{html.escape(item.title)}</h2>
+
+<p><b>Date:</b> {item.date}</p>
+
+<p class="summary">
+
+{html.escape(item.summary)}
+
+</p>
+
+<p>
+
+<b>Why it matters:</b>
+
+{html.escape(item.why_it_matters)}
+
+</p>
+
+<a class="button"
+
+href="{item.source_link}">
+
+Read More →
+
+</a>
+
+</div>
+
+""")
+
+    blocks.append("</div>")
+
+    return "\n".join(blocks)
 
 
 def _html_section(title: str, items: list[SummaryItem]) -> str:
