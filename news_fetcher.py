@@ -93,6 +93,7 @@ def fetch_top_items(
                     link=link,
                     published=published,
                     summary_text=summary_text,
+                    image_url=_extract_image(entry),
                     source_name=feed.name,
                     category=category,
                     score=score,
@@ -193,3 +194,21 @@ def _select_diverse_items(items: list[NewsItem], limit: int, per_source_limit: i
             selected_links.add(item.link)
 
     return selected
+def _extract_image(entry) -> str:
+    # media:thumbnail
+    media = entry.get("media_thumbnail")
+    if media and len(media):
+        return media[0].get("url", "")
+
+    # media:content
+    media = entry.get("media_content")
+    if media and len(media):
+        return media[0].get("url", "")
+
+    # enclosure
+    if "links" in entry:
+        for link in entry.links:
+            if getattr(link, "type", "").startswith("image"):
+                return getattr(link, "href", "")
+
+    return ""
