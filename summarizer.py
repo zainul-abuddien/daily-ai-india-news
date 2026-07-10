@@ -20,6 +20,7 @@ class SummaryItem:
     why_it_matters: str
     source_link: str
     source_name: str
+    image_url: str
 
 
 def summarize_item(item: NewsItem) -> SummaryItem:
@@ -32,6 +33,7 @@ def summarize_item(item: NewsItem) -> SummaryItem:
         why_it_matters=why_it_matters,
         source_link=item.link,
         source_name=item.source_name,
+        image_url=item.image_url,
     )
 
 
