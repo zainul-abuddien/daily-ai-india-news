@@ -21,6 +21,7 @@ class NewsItem:
     link: str
     published: datetime
     summary_text: str
+    image_url: str
     source_name: str
     category: Category
     score: int
