@@ -3,13 +3,12 @@ name: Daily AI + India News Email
 on:
   schedule:
     - cron: "30 22 * * *"  # 4:00 AM IST
-    - cron: "35 22 * * *"  # 4:05 AM IST
-    - cron: "40 22 * * *"  # 4:10 AM IST
   workflow_dispatch:
 
 jobs:
   send-news-email:
     runs-on: ubuntu-latest
+
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -24,10 +23,12 @@ jobs:
 
       - name: Send daily email
         env:
-  	  GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
-  	  GMAIL_ADDRESS: ${{ secrets.GMAIL_ADDRESS }}
-  	  GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
-  	  TO_EMAIL: ${{ secrets.TO_EMAIL }}
-  	  SENDER_NAME: Daily News Bot
-  	  MAX_NEWS_AGE_HOURS: "48"
-  	  TIMEZONE: Asia/Kolkata
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          GMAIL_ADDRESS: ${{ secrets.GMAIL_ADDRESS }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+          TO_EMAIL: ${{ secrets.TO_EMAIL }}
+          SENDER_NAME: Daily News Bot
+          MAX_NEWS_AGE_HOURS: "48"
+          TIMEZONE: Asia/Kolkata
+
+        run: python main.py --send
