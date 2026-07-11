@@ -17,15 +17,21 @@ def generate_summary(news_text: str) -> str:
                 "role": "system",
                 "content": (
                     "You are a professional daily news editor. "
-                    "Create concise, accurate summaries for a newsletter."
+                    "Write concise newsletter summaries."
                 )
             },
             {
                 "role": "user",
                 "content": f"""
-Summarize this news in 3-5 sentences.
+Summarize this news in 3-4 clear sentences.
 
-Also explain why this news matters.
+Rules:
+- Write only the summary.
+- Do not explain why it matters.
+- Do not write "This news matters because".
+- Do not add headings.
+- Keep it factual and easy to understand.
+- Remove unnecessary details.
 
 News:
 {news_text}
@@ -33,7 +39,7 @@ News:
             }
         ],
         temperature=0.4,
-        max_tokens=300
+        max_tokens=250
     )
 
     return response.choices[0].message.content.strip()
