@@ -10,7 +10,7 @@ import re
 from dataclasses import dataclass
 
 from news_fetcher import NewsItem
-
+from groq_client import generate_summary
 
 @dataclass(frozen=True)
 class SummaryItem:
@@ -48,22 +48,26 @@ def create_key_takeaway(ai_items: list[SummaryItem], india_items: list[SummaryIt
 
 def _simple_summary(item: NewsItem) -> str:
     source_text = item.summary_text or item.title
-    sentences = _split_sentences(source_text)
 
-    if not sentences:
-        return f"This update reports that {item.title}. Read the source for the full details."
+    try:
+        return generate_summary(
+            f"""
+Title: {item.title}
 
-    clean_sentences = []
-    for sentence in sentences[:3]:
-        sentence = sentence.strip()
-        if sentence and sentence not in clean_sentences:
-            clean_sentences.append(sentence)
+Description:
+{source_text}
+"""
+        )
 
-    summary = " ".join(clean_sentences)
-    if len(summary) < 90 and item.title not in summary:
-        summary = f"{item.title}. {summary}"
+    except Exception as error:
+        print(f"Groq failed, using fallback summary: {error}")
 
-    return summary[:700].strip()
+        sentences = _split_sentences(source_text)
+
+        if not sentences:
+            return f"This update reports that {item.title}. Read the source for the full details."
+
+        return " ".join(sentences[:3])[:700].strip()
 
 
 def _why_it_matters(item: NewsItem) -> str:
