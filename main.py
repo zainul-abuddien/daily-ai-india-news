@@ -17,6 +17,7 @@ from dotenv import load_dotenv
 
 from config import FEEDS
 from email_sender import EmailSettings, build_email_body, build_subject, send_email
+from weather import get_weather
 from news_fetcher import fetch_top_items
 from summarizer import create_key_takeaway, summarize_item
 
@@ -59,7 +60,14 @@ def main() -> int:
     key_takeaway = create_key_takeaway(ai_summaries, india_summaries)
 
     subject = build_subject(today)
-    plain_body, html_body = build_email_body(today, ai_summaries, india_summaries, key_takeaway)
+    weather = get_weather()
+    plain_body, html_body = build_email_body(
+    today,
+    ai_summaries,
+    india_summaries,
+    key_takeaway,
+    weather,
+)
 
     if args.save_preview or args.dry_run:
         Path("email_preview.txt").write_text(plain_body, encoding="utf-8")
